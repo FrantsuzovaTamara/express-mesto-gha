@@ -1,0 +1,34 @@
+{
+  "name": "express-mesto-gha",
+  "version": "1.0.0",
+  "description": "Проект Mesto фронтенд + бэкенд",
+  "main": "index.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js",
+    "lint": "npx eslint",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FrantsuzovaTamara/express-mesto-gha.git"
+  },
+  "keywords": [],
+  "author": "Tamara Frantsuzova",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/FrantsuzovaTamara/express-mesto-gha/issues"
+  },
+  "homepage": "https://github.com/FrantsuzovaTamara/express-mesto-gha#readme",
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "express": "^4.18.2",
+    "mongoose": "^6.10.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.35.0",
+    "eslint-plugin-react": "^7.32.2",
+    "nodemon": "^2.0.20"
+  }
+}
