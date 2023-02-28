@@ -6,8 +6,11 @@ module.exports.createCard = (req, res) => {
   Card.create({ name, owner: req.user._id, link })
     .then((card) => res.send({ card }))
     .catch((err) => {
-      res.status(400).send({message: 'При создании карточки были переданы некорректные данные'});
-      res.status(500).send({ message: `Произошла ошибка ${err}` });
+      if (err.name === "ValidationError") {
+        res.status(400).send({message: 'При создании карточки были переданы некорректные данные'});
+      } else {
+        res.status(500).send({ message: `Произошла ошибка ${err}` });
+      }
     });
 };
 
@@ -47,8 +50,11 @@ module.exports.likeCard = (req, res) => {
       res.send({ card });
     })
     .catch((err) => {
-      res.status(400).send({message: 'При обновлении карточки были переданы некорректные данные'});
-      res.status(500).send({ message: `Произошла ошибка ${err}` });
+      if (err.name === "ValidationError") {
+        res.status(400).send({message: 'При обновлении карточки были переданы некорректные данные'});
+      } else {
+        res.status(500).send({ message: `Произошла ошибка ${err}` });
+      }
     });
 };
 
@@ -66,7 +72,10 @@ module.exports.dislikeCard = (req, res) => {
       res.send({ card });
     })
     .catch((err) => {
-      res.status(400).send({message: 'При обновлении карточки были переданы некорректные данные'});
-      res.status(500).send({ message: `Произошла ошибка ${err}` });
+      if (err.name === "ValidationError") {
+        res.status(400).send({message: 'При обновлении карточки были переданы некорректные данные'});
+      } else {
+        res.status(500).send({ message: `Произошла ошибка ${err}` });
+      }
     });
 };
