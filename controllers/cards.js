@@ -31,9 +31,13 @@ module.exports.deleteCard = (req, res) => {
       }
       res.send({ card });
     })
-    .catch((err) =>
-      res.status(500).send({ message: `Произошла ошибка ${err}` })
-    );
+    .catch((err) => {
+      if (err.name === "CastError") {
+        res.status(400).send({message: 'Введён некорректный id карточки'});
+      } else {
+        res.status(500).send({ message: `Произошла ошибка ${err}` });
+      }
+    });
 };
 
 module.exports.likeCard = (req, res) => {
