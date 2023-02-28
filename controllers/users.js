@@ -4,9 +4,9 @@ module.exports.createUser = (req, res) => {
   const { name, about, avatar } = req.body;
 
   User.create({ name, about, avatar })
-    .then(user => res.send({ user }))
+  .then(user => res.send({ user }))
     .catch((err) => {
-      res.status(400).send({message: 'При создании пользователя были переданы некорректные данные'});
+      res.status(400).send({ message: 'При создании пользователя были переданы некорректные данные' });
       res.status(500).send({ message: `Произошла ошибка ${err}` });
     });
 };
