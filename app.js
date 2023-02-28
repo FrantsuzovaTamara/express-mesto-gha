@@ -13,7 +13,6 @@ mongoose.connect('mongodb://0.0.0.0:27017/mestodb', {
   useNewUrlParser: true
 });
 
-app.use('/users', require('./routes/users'));
 app.use((req, res, next) => {
   req.user = {
     _id: '63fb8af87685cf83136bb861'
@@ -21,6 +20,8 @@ app.use((req, res, next) => {
 
   next();
 });
+
+app.use('/users', require('./routes/users'));
 app.use('/cards', require('./routes/cards'));
 
 app.use(express.static(path.join(__dirname, 'public')));
