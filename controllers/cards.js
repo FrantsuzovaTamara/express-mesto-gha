@@ -50,7 +50,7 @@ module.exports.likeCard = (req, res) => {
       res.send({ card });
     })
     .catch((err) => {
-      if (err.name === "ValidationError") {
+      if (err.name === "CastError") {
         res.status(400).send({message: 'При обновлении карточки были переданы некорректные данные'});
       } else {
         res.status(500).send({ message: `Произошла ошибка ${err}` });
@@ -72,7 +72,7 @@ module.exports.dislikeCard = (req, res) => {
       res.send({ card });
     })
     .catch((err) => {
-      if (err.name === "ValidationError") {
+      if (err.name === "CastError") {
         res.status(400).send({message: 'При обновлении карточки были переданы некорректные данные'});
       } else {
         res.status(500).send({ message: `Произошла ошибка ${err}` });
