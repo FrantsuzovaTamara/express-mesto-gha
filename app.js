@@ -10,12 +10,12 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 mongoose.connect('mongodb://0.0.0.0:27017/mestodb', {
-  useNewUrlParser: true
+  useNewUrlParser: true,
 });
 
 app.use((req, res, next) => {
   req.user = {
-    _id: '63fb8af87685cf83136bb861'
+    _id: '63fb8af87685cf83136bb861',
   };
 
   next();
@@ -25,7 +25,7 @@ app.use('/users', require('./routes/users'));
 app.use('/cards', require('./routes/cards'));
 
 app.use('/404', (req, res) => {
-  res.status(404).send({ message: "Страница не найдена" });
+  res.status(404).send({ message: 'Страница не найдена' });
 });
 
 app.use(express.static(path.join(__dirname, 'public')));
