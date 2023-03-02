@@ -1,4 +1,5 @@
 const User = require('../models/user');
+const { formatErrorMessage, VALIDATION_ERROR_CODE, NOT_FOUND_ERROR_CODE, OTHER_ERROR_CODE } = require('../errors');
 
 module.exports.createUser = (req, res) => {
   const { name, about, avatar } = req.body;
@@ -8,13 +9,10 @@ module.exports.createUser = (req, res) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         res
-          .status(400)
-          .send({
-            message:
-              'При создании пользователя были переданы некорректные данные',
-          });
+          .status(VALIDATION_ERROR_CODE)
+          .send({ message: formatErrorMessage(err.message, Object.keys(err.errors)) });
       } else {
-        res.status(500).send({ message: 'Произошла ошибка' });
+        res.status(OTHER_ERROR_CODE).send({ message: 'Произошла ошибка' });
       }
     });
 };
@@ -22,7 +20,7 @@ module.exports.createUser = (req, res) => {
 module.exports.getUsers = (req, res) => {
   User.find({})
     .then((users) => res.send({ users }))
-    .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
+    .catch(() => res.status(OTHER_ERROR_CODE).send({ message: 'Произошла ошибка' }));
 };
 
 module.exports.getUserById = (req, res) => {
@@ -30,7 +28,7 @@ module.exports.getUserById = (req, res) => {
     .then((user) => {
       if (!user) {
         res
-          .status(404)
+          .status(NOT_FOUND_ERROR_CODE)
           .send({ message: 'Запрашиваемый пользователь не найден' });
         return;
       }
@@ -39,10 +37,10 @@ module.exports.getUserById = (req, res) => {
     .catch((err) => {
       if (err.name === 'CastError') {
         res
-          .status(400)
+          .status(VALIDATION_ERROR_CODE)
           .send({ message: 'Введён некорректный id пользователя' });
       } else {
-        res.status(500).send({ message: 'Произошла ошибка' });
+        res.status(OTHER_ERROR_CODE).send({ message: 'Произошла ошибка' });
       }
     });
 };
@@ -58,7 +56,7 @@ module.exports.changeProfileInfo = (req, res) => {
     .then((user) => {
       if (!user) {
         res
-          .status(404)
+          .status(NOT_FOUND_ERROR_CODE)
           .send({ message: 'Запрашиваемый пользователь не найден' });
         return;
       }
@@ -67,13 +65,10 @@ module.exports.changeProfileInfo = (req, res) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         res
-          .status(400)
-          .send({
-            message:
-              'При обновлении данных пользователя были переданы некорректные данные',
-          });
+          .status(VALIDATION_ERROR_CODE)
+          .send({ message: formatErrorMessage(err.message, Object.keys(err.errors)) });
       } else {
-        res.status(500).send({ message: 'Произошла ошибка' });
+        res.status(OTHER_ERROR_CODE).send({ message: 'Произошла ошибка' });
       }
     });
 };
@@ -89,7 +84,7 @@ module.exports.changeAvatar = (req, res) => {
     .then((user) => {
       if (!user) {
         res
-          .status(404)
+          .status(NOT_FOUND_ERROR_CODE)
           .send({ message: 'Запрашиваемый пользователь не найден' });
         return;
       }
@@ -98,13 +93,10 @@ module.exports.changeAvatar = (req, res) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         res
-          .status(400)
-          .send({
-            message:
-              'При обновлении данных пользователя были переданы некорректные данные',
-          });
+          .status(VALIDATION_ERROR_CODE)
+          .send({ message: formatErrorMessage(err.message, Object.keys(err.errors)) });
       } else {
-        res.status(500).send({ message: 'Произошла ошибка' });
+        res.status(OTHER_ERROR_CODE).send({ message: 'Произошла ошибка' });
       }
     });
 };

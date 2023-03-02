@@ -3,9 +3,9 @@ const mongoose = require('mongoose');
 const cardSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: true,
-    minlength: 2,
-    maxlength: 30,
+    required: [true, 'Введите название карточки.'],
+    minlength: [2, 'Название карточки слишком короткое.'],
+    maxlength: [30, 'Название карточки слишком длинноею'],
   },
   owner: {
     required: true,
@@ -14,13 +14,15 @@ const cardSchema = new mongoose.Schema({
   },
   link: {
     type: String,
-    required: true,
+    required: [true, 'Введите ссылку на картинку.'],
   },
-  likes: {
-    default: [],
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'user',
-  },
+  likes: [
+    {
+      default: [],
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'user',
+    },
+  ],
   createdAt: {
     type: Date,
     default: Date.now,
