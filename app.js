@@ -18,9 +18,6 @@ mongoose.connect('mongodb://0.0.0.0:27017/mestodb', {
   useNewUrlParser: true,
 });
 
-app.use('/users', auth, require('./routes/users'));
-app.use('/cards', auth, require('./routes/cards'));
-
 app.post(
   '/signup',
   celebrate({
@@ -47,6 +44,9 @@ app.post(
   }),
   login
 );
+
+app.use('/users', auth, require('./routes/users'));
+app.use('/cards', auth, require('./routes/cards'));
 
 app.use(errors());
 
