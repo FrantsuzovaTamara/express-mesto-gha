@@ -24,7 +24,7 @@ app.use('/users', auth, require('./routes/users'));
 app.use('/cards', auth, require('./routes/cards'));
 
 app.use((req, res, next) => {
-  res.status(NOT_FOUND_ERROR_CODE).send({ message: 'Страница не найдена!' });
+  res.status(NOT_FOUND_ERROR_CODE).send({ message: 'Страница не найдена! Проверьте правильно ли введена ссылка' });
   next();
 });
 
