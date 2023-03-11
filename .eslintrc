@@ -11,7 +11,7 @@
         "sourceType": "module"
     },
     "rules": {
-      "no-underscore-dangle": ["error", { "allow": ["_id"] }],
+      "no-underscore-dangle": ["error", { "allow": ["_id"], "treatUndefinedAsUnspecified": false }],
       "no-console": 0,
       "no-plusplus": "off"
     }

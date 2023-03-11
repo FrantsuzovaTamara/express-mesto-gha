@@ -3,6 +3,7 @@ const {
   formatErrorMessage,
   VALIDATION_ERROR_CODE,
   NOT_FOUND_ERROR_CODE,
+  METHOD_NOT_ALLOWED_ERROR_CODE,
   OTHER_ERROR_CODE,
 } = require('../errors');
 
@@ -39,6 +40,10 @@ module.exports.deleteCard = (req, res) => {
         res
           .status(NOT_FOUND_ERROR_CODE)
           .send({ message: 'Карточка не найдена' });
+        return;
+      }
+      if (card.owner._id != req.user._id) {
+        res.status(METHOD_NOT_ALLOWED_ERROR_CODE).send({ message: 'Вы не можете удалить эту карточку' });
         return;
       }
       res.send({ card });
