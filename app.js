@@ -2,7 +2,7 @@ const path = require('path');
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-const { NOT_FOUND_ERROR_CODE } = require('./errors');
+const { Joi, celebrate, errors } = require('celebrate');
 require('dotenv').config();
 
 const { PORT = 3000, BASE_PATH } = process.env;
@@ -18,15 +18,44 @@ mongoose.connect('mongodb://0.0.0.0:27017/mestodb', {
   useNewUrlParser: true,
 });
 
-app.post('/signup', createUser);
-app.post('/signin', login);
-
 app.use('/users', auth, require('./routes/users'));
 app.use('/cards', auth, require('./routes/cards'));
 
-app.use((req, res, next) => {
-  res.status(NOT_FOUND_ERROR_CODE).send({ message: 'Страница не найдена! Проверьте правильно ли введена ссылка' });
-  next();
+app.post(
+  '/signup',
+  celebrate({
+    body: Joi.object().keys({
+      name: Joi.string().min(2).max(30).default('Жак-Ив Кусто'),
+      about: Joi.string().min(2).max(30).default('Исследователь'),
+      avatar: Joi.string().pattern(new RegExp('^https:\/\/+')).default(
+        'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png'
+      ),
+      email: Joi.string().required().email(),
+      password: Joi.string().required().min(8),
+    }),
+  }),
+  createUser
+);
+
+app.post(
+  '/signin',
+  celebrate({
+    body: Joi.object().keys({
+      email: Joi.string().required().email(),
+      password: Joi.string().required().min(8),
+    }),
+  }),
+  login
+);
+
+app.use(errors());
+
+app.use((err, req, res, next) => {
+  const { statusCode = 500, message } = err;
+
+  res.status(err.statusCode).send({
+    message: statusCode === 500 ? 'На сервере произошла ошибка' : message,
+  });
 });
 
 app.use(express.static(path.join(__dirname, 'public')));
