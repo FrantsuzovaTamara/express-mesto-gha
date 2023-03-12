@@ -25,7 +25,7 @@ app.post(
     body: Joi.object().keys({
       name: Joi.string().min(2).max(30).default('Жак-Ив Кусто'),
       about: Joi.string().min(2).max(30).default('Исследователь'),
-      avatar: Joi.string().pattern(new RegExp('^https:\/\/+')).default(
+      avatar: Joi.string().pattern(new RegExp('^http[s]{0,1}:\/\/[a-z0-9@!$&\'-._~:\/?#[\]@!$&()*+,;=]{5,}')).default(
         'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png'
       ),
       email: Joi.string().required().email(),
@@ -51,7 +51,7 @@ app.use('/cards', auth, require('./routes/cards'));
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(errors);
+app.use(errors());
 app.use(error);
 
 app.listen(PORT, () => {

@@ -5,10 +5,10 @@ class NotFoundError extends Error {
   }
 }
 
-class ValidationError extends Error {
+class MethodNotAllowedError extends Error {
   constructor(message) {
     super(message);
-    this.statusCode = 400;
+    this.statusCode = 405;
   }
 }
 
@@ -19,16 +19,13 @@ class UnauthorizedError extends Error {
   }
 }
 
-class MethodNotAllowedError extends Error {
-  constructor(message) {
-    super(message);
-    this.statusCode = 405;
-  }
-}
+CONFLICT_ERROR_CODE = 409;
+UNAUTHORIZED_ERROR_CODE = 401;
 
 module.exports = {
-  ValidationError,
+  CONFLICT_ERROR_CODE,
   NotFoundError,
+  UNAUTHORIZED_ERROR_CODE,
   UnauthorizedError,
   MethodNotAllowedError
 };

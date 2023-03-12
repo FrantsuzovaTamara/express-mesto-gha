@@ -2,7 +2,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const { JWT_SECRET } = process.env;
-const { ValidationError, NotFoundError } = require('../errors');
+const { NotFoundError } = require('../errors');
 
 module.exports.createUser = (req, res, next) => {
   bcrypt.hash(req.body.password, 10)
