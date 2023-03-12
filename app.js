@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const { Joi, celebrate, errors } = require('celebrate');
 require('dotenv').config();
+const error = require('./middlewares/error');
 
 const { PORT = 3000, BASE_PATH } = process.env;
 const app = express();
@@ -48,17 +49,11 @@ app.post(
 app.use('/users', auth, require('./routes/users'));
 app.use('/cards', auth, require('./routes/cards'));
 
-app.use(errors());
-
-app.use((err, req, res, next) => {
-  const { statusCode = 500, message } = err;
-
-  res.status(err.statusCode).send({
-    message: statusCode === 500 ? 'На сервере произошла ошибка' : message,
-  });
-});
-
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(errors);
+app.use(error);
+
 app.listen(PORT, () => {
   console.log('Ссылка на сервер');
   console.log(BASE_PATH);

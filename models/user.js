@@ -19,6 +19,7 @@ const userSchema = new mongoose.Schema({
   email: {
     type: String,
     unique: true,
+    dropDups: true,
     required: true,
     validate: {
       validator: (v) => isEmail(v),
@@ -30,7 +31,7 @@ const userSchema = new mongoose.Schema({
     required: true,
     minlength: [8, 'Пароль слишком короткий']
   },
-});
+}, { versionKey: false });
 
 userSchema.statics.findUserByCredentials = function (email, password) {
   return this.findOne({ email }).then((user) => {
