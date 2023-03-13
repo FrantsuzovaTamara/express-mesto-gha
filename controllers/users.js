@@ -2,7 +2,11 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const { JWT_SECRET } = process.env;
-const { NotFoundError } = require('../errors');
+const {
+  NotFoundError,
+  formatErrorMessage,
+  ValidationError
+} = require('../errors');
 
 module.exports.createUser = (req, res, next) => {
   bcrypt.hash(req.body.password, 10)
@@ -15,9 +19,20 @@ module.exports.createUser = (req, res, next) => {
         password: hash,
       }))
     .then((user) => {
-      res.status(201).send({ user });
+      res.status(201).send({
+        name: user.name,
+        about: user.about,
+        avatar: user.avatar,
+        email: user.email,
+      });
     })
-    .catch(next);
+    .catch(err => {
+      if (err.name === 'ValidationError') {
+        const message = formatErrorMessage(err.message, Object.keys(err.errors));
+        next(new ValidationError(message));
+      }
+      next(err);
+    });
 };
 
 module.exports.login = (req, res, next) => {
@@ -25,7 +40,7 @@ module.exports.login = (req, res, next) => {
 
   return User.findUserByCredentials(email, password)
     .then((user) => {
-      res.send({
+      res.status(200).send({
         token: jwt.sign({ _id: user._id }, JWT_SECRET, {
           expiresIn: '7d',
         }),
@@ -36,7 +51,7 @@ module.exports.login = (req, res, next) => {
 
 module.exports.getUsers = (req, res, next) => {
   User.find({})
-    .then((users) => res.send(201).send({ users }))
+    .then((users) => res.status(200).send({ data: users }))
     .catch(next);
 };
 
@@ -46,9 +61,19 @@ module.exports.getUser = (req, res, next) => {
       if (!user) {
         throw new NotFoundError('Нет пользователя с таким id');
       }
-      res.send({ user });
+      return res.status(200).send({
+        name: user.name,
+        about: user.about,
+        avatar: user.avatar,
+        email: user.email,
+      });
     })
-    .catch(next);
+    .catch(err => {
+      if (err.name === 'CastError') {
+        next(new ValidationError('Введён некорректный id пользователя'));
+      }
+      next(err);
+    });
 };
 
 module.exports.getUserById = (req, res, next) => {
@@ -57,9 +82,19 @@ module.exports.getUserById = (req, res, next) => {
       if (!user) {
         throw new NotFoundError('Нет пользователя с таким id');
       }
-      res.send({ user });
+      res.status(200).send({
+        name: user.name,
+        about: user.about,
+        avatar: user.avatar,
+        email: user.email,
+      });
     })
-    .catch(next);
+    .catch(err => {
+      if (err.name === 'CastError') {
+        next(new ValidationError('Введён некорректный id пользователя'));
+      }
+      next(err);
+    });
 };
 
 module.exports.changeProfileInfo = (req, res, next) => {
@@ -74,9 +109,20 @@ module.exports.changeProfileInfo = (req, res, next) => {
       if (!user) {
         throw new NotFoundError('Нет пользователя с таким id');
       }
-      res.send({ user });
+      res.status(200).send({
+        name: user.name,
+        about: user.about,
+        avatar: user.avatar,
+        email: user.email,
+      });
     })
-    .catch(next);
+    .catch(err => {
+      if (err.name === 'ValidationError') {
+        const message = formatErrorMessage(err.message, Object.keys(err.errors));
+        next(new ValidationError(message));
+      }
+      next(err);
+    });
 };
 
 module.exports.changeAvatar = (req, res, next) => {
@@ -91,7 +137,18 @@ module.exports.changeAvatar = (req, res, next) => {
       if (!user) {
         throw new NotFoundError('Нет пользователя с таким id');
       }
-      res.send({ user });
+      res.status(200).send({
+        name: user.name,
+        about: user.about,
+        avatar: user.avatar,
+        email: user.email,
+      });
     })
-    .catch(next);
+    .catch(err => {
+      if (err.name === 'ValidationError') {
+        const message = formatErrorMessage(err.message, Object.keys(err.errors));
+        next(new ValidationError(message));
+      }
+      next(err);
+    });
 };

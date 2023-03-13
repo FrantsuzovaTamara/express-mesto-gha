@@ -8,8 +8,6 @@ const {
   changeAvatar,
 } = require('../controllers/users');
 
-router.get('/', getUsers);
-router.get('/:_id', getUserById);
 router.get('/me', getUser);
 router.patch('/me', celebrate({
   body: Joi.object().keys({
@@ -24,5 +22,7 @@ router.patch('/me/avatar', celebrate({
     ),
     })
 }), changeAvatar);
+router.get('/', getUsers);
+router.get('/:_id', getUserById);
 
 module.exports = router;
