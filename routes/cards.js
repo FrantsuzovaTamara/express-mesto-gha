@@ -11,13 +11,13 @@ const {
 router.get('/', getCards);
 router.delete('/:_id', celebrate({
   body: Joi.object().keys({
-    _id: Joi.string().required().RegExp(/[a-z0-9]{24}/),
+    _id: Joi.string().required().regex(/[a-z0-9]{24}/),
   })
 }), deleteCard);
 router.post('/', celebrate({
   body: Joi.object().keys({
     name: Joi.string().required().min(2).max(30),
-    link: Joi.string().required().pattern(new RegExp('^https:\/\/+')),
+    link: Joi.string().required().regex(/^http[s]{0,1}:\/\/[a-z0-9@!$&\'-._~:\/?#[\]@!$&()*+,;=]{5,}/),
   })
 }), createCard);
 router.put('/:_id/likes', celebrate({
