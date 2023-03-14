@@ -19,10 +19,10 @@ class NotFoundError extends Error {
   }
 }
 
-class MethodNotAllowedError extends Error {
+class ForbiddenError extends Error {
   constructor(message) {
     super(message);
-    this.statusCode = 405;
+    this.statusCode = 403;
   }
 }
 
@@ -47,6 +47,6 @@ module.exports = {
   CONFLICT_ERROR_CODE,
   NotFoundError,
   UnauthorizedError,
-  MethodNotAllowedError,
+  ForbiddenError,
   formatErrorMessage
 };

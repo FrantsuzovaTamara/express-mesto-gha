@@ -17,7 +17,7 @@ router.patch('/me', celebrate({
 }), changeProfileInfo);
 router.patch('/me/avatar', celebrate({
   body: Joi.object().keys({
-    avatar: Joi.string().pattern(new RegExp('^https:\/\/+')).default(
+    avatar: Joi.string().regex(/^http[s]{0,1}:\/\/[a-z0-9@!$&\'-._~:\/?#[\]@!$&()*+,;=]{5,}/).default(
       'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png'
     ),
     })

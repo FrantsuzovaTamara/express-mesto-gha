@@ -11,6 +11,7 @@ const app = express();
 
 const auth = require('./middlewares/auth');
 const { createUser, login } = require('./controllers/users');
+const { NotFoundError } = require('./errors');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -48,12 +49,14 @@ app.post(
 
 app.use('/users', auth, require('./routes/users'));
 app.use('/cards', auth, require('./routes/cards'));
-
-app.use(express.static(path.join(__dirname, 'public')));
+app.use((req, res, next) => {
+  next(new NotFoundError('Страница не найдена! Проверьте правильно ли введена ссылка'));
+});
 
 app.use(errors());
 app.use(error);
 
+app.use(express.static(path.join(__dirname, 'public')));
 app.listen(PORT, () => {
   console.log('Ссылка на сервер');
   console.log(BASE_PATH);
