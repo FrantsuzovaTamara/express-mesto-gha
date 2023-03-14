@@ -7,7 +7,7 @@ const {
   likeCard,
   dislikeCard,
 } = require('../controllers/cards');
-const auth = require('./middlewares/auth');
+const auth = require('../middlewares/auth');
 
 router.get('/', auth, getCards);
 router.delete('/:_id', auth, celebrate({
