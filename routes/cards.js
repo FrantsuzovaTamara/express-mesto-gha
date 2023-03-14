@@ -22,12 +22,12 @@ router.post('/', celebrate({
 }), createCard);
 router.put('/:_id/likes', celebrate({
   body: Joi.object().keys({
-    _id: Joi.string().required().RegExp(/[a-z0-9]{24}/),
+    _id: Joi.string().required().regexp(/[a-z0-9]{24}/),
   })
 }), likeCard);
 router.delete('/:_id/likes', celebrate({
   body: Joi.object().keys({
-    _id: Joi.string().required().RegExp(/[a-z0-9]{24}/),
+    _id: Joi.string().required().regexp(/[a-z0-9]{24}/),
   })
 }), dislikeCard);
 
