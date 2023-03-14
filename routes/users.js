@@ -7,7 +7,7 @@ const {
   changeProfileInfo,
   changeAvatar,
 } = require('../controllers/users');
-const auth = require('./middlewares/auth');
+const auth = require('../middlewares/auth');
 
 router.get('/me', getUser);
 router.patch('/me', celebrate({
