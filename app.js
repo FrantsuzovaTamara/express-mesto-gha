@@ -9,7 +9,6 @@ const error = require('./middlewares/error');
 const { PORT = 3000, BASE_PATH } = process.env;
 const app = express();
 
-const auth = require('./middlewares/auth');
 const { createUser, login } = require('./controllers/users');
 const { NotFoundError } = require('./errors');
 
@@ -47,8 +46,8 @@ app.post(
   login
 );
 
-app.use('/users', auth, require('./routes/users'));
-app.use('/cards', auth, require('./routes/cards'));
+app.use('/users', require('./routes/users'));
+app.use('/cards', require('./routes/cards'));
 app.use((req, res, next) => {
   next(new NotFoundError('Страница не найдена! Проверьте правильно ли введена ссылка'));
 });
