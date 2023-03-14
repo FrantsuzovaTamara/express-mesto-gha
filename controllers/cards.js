@@ -33,12 +33,12 @@ module.exports.deleteCard = (req, res, next) => {
       if (!card) {
         throw new NotFoundError('Карточка не найдена');
       }
-      if (card.owner._id !== req.user._id) {
+      if (card.owner != req.user._id) {
         throw new ForbiddenError(
           'Вы не можете удалить карточку другого пользователя',
         );
       }
-      res.status(200).send({ card });
+      res.status(200).send({ message: 'Карточка успешно удалена' });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -58,7 +58,7 @@ module.exports.likeCard = (req, res, next) => {
       if (!card) {
         throw new NotFoundError('Карточка не найдена');
       }
-      res.status(200).send({ card });
+      res.status(200).send({ message: 'Лайк успешно поставлен' });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -82,7 +82,7 @@ module.exports.dislikeCard = (req, res, next) => {
       if (!card) {
         throw new NotFoundError('Карточка не найдена');
       }
-      res.status(200).send({ card });
+      res.status(200).send({ message: 'Лайк успешно удалён' });
     })
     .catch((err) => {
       if (err.name === 'CastError') {

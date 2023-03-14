@@ -10,7 +10,7 @@ const { PORT = 3000, BASE_PATH } = process.env;
 const app = express();
 
 const { createUser, login } = require('./controllers/users');
-const { NotFoundError } = require('./errors/NotFoundError');
+const NotFoundError = require('./errors/NotFoundError');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));

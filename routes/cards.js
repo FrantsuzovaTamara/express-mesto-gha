@@ -14,10 +14,10 @@ router.delete(
   '/:_id',
   auth,
   celebrate({
-    body: Joi.object().keys({
+    params: Joi.object().keys({
       _id: Joi.string()
         .required()
-        .regex(/[a-z0-9]{24}/),
+        .regex(/[a-z0-9]{10,}/),
     }),
   }),
   deleteCard,
@@ -35,25 +35,25 @@ router.post(
   auth,
   createCard,
 );
-router.put(
+router.delete(
   '/:_id/likes',
   celebrate({
-    body: Joi.object().keys({
+    params: Joi.object().keys({
       _id: Joi.string()
         .required()
-        .regex(/[a-z0-9]{24}/),
+        .regex(/[a-z0-9]{10,}/),
     }),
   }),
   auth,
   likeCard,
 );
-router.delete(
+router.put(
   '/:_id/likes',
   celebrate({
-    body: Joi.object().keys({
+    params: Joi.object().keys({
       _id: Joi.string()
         .required()
-        .regex(/[a-z0-9]{24}/),
+        .regex(/[a-z0-9]{10,}/),
     }),
   }),
   auth,
