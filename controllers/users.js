@@ -1,23 +1,26 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+
 const User = require('../models/user');
-const { JWT_SECRET = "JWT_SECRET" } = process.env;
-const {
-  NotFoundError,
-  formatErrorMessage,
-  ValidationError
-} = require('../errors');
+
+const { JWT_SECRET = 'JWT_SECRET' } = process.env;
+
+const NotFoundError = require('../errors/NotFoundError');
+const ValidationError = require('../errors/ValidationError');
+const formatErrorMessage = require('../errors/formatErrorMessage');
 
 module.exports.createUser = (req, res, next) => {
-  bcrypt.hash(req.body.password, 10)
-    .then(hash =>
+  bcrypt
+    .hash(req.body.password, 10)
+    .then((hash) => {
       User.create({
         name: req.body.name,
         about: req.body.about,
         avatar: req.body.avatar,
         email: req.body.email,
         password: hash,
-      }))
+      });
+    })
     .then((user) => {
       res.status(201).send({
         name: user.name,
@@ -26,9 +29,12 @@ module.exports.createUser = (req, res, next) => {
         email: user.email,
       });
     })
-    .catch(err => {
+    .catch((err) => {
       if (err.name === 'ValidationError') {
-        const message = formatErrorMessage(err.message, Object.keys(err.errors));
+        const message = formatErrorMessage(
+          err.message,
+          Object.keys(err.errors),
+        );
         next(new ValidationError(message));
       }
       next(err);
@@ -68,7 +74,7 @@ module.exports.getUser = (req, res, next) => {
         email: user.email,
       });
     })
-    .catch(err => {
+    .catch((err) => {
       if (err.name === 'CastError') {
         next(new ValidationError('Введён некорректный id пользователя'));
       }
@@ -82,14 +88,9 @@ module.exports.getUserById = (req, res, next) => {
       if (!user) {
         throw new NotFoundError('Нет пользователя с таким id');
       }
-      res.status(200).send({
-        name: user.name,
-        about: user.about,
-        avatar: user.avatar,
-        email: user.email,
-      });
+      res.status(200).send({ user });
     })
-    .catch(err => {
+    .catch((err) => {
       if (err.name === 'CastError') {
         next(new ValidationError('Введён некорректный id пользователя'));
       }
@@ -103,22 +104,20 @@ module.exports.changeProfileInfo = (req, res, next) => {
   User.findByIdAndUpdate(
     req.user._id,
     { name, about },
-    { new: true, runValidators: true }
+    { new: true, runValidators: true },
   )
     .then((user) => {
       if (!user) {
         throw new NotFoundError('Нет пользователя с таким id');
       }
-      res.status(200).send({
-        name: user.name,
-        about: user.about,
-        avatar: user.avatar,
-        email: user.email,
-      });
+      res.status(200).send({ user });
     })
-    .catch(err => {
+    .catch((err) => {
       if (err.name === 'ValidationError') {
-        const message = formatErrorMessage(err.message, Object.keys(err.errors));
+        const message = formatErrorMessage(
+          err.message,
+          Object.keys(err.errors),
+        );
         next(new ValidationError(message));
       }
       next(err);
@@ -131,22 +130,20 @@ module.exports.changeAvatar = (req, res, next) => {
   User.findByIdAndUpdate(
     req.user._id,
     { avatar },
-    { new: true, runValidators: true }
+    { new: true, runValidators: true },
   )
     .then((user) => {
       if (!user) {
         throw new NotFoundError('Нет пользователя с таким id');
       }
-      res.status(200).send({
-        name: user.name,
-        about: user.about,
-        avatar: user.avatar,
-        email: user.email,
-      });
+      res.status(200).send({ user });
     })
-    .catch(err => {
+    .catch((err) => {
       if (err.name === 'ValidationError') {
-        const message = formatErrorMessage(err.message, Object.keys(err.errors));
+        const message = formatErrorMessage(
+          err.message,
+          Object.keys(err.errors),
+        );
         next(new ValidationError(message));
       }
       next(err);

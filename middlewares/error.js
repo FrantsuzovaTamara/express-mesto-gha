@@ -1,9 +1,7 @@
-const { CONFLICT_ERROR_CODE } = require('../errors');
-
 module.exports = (err, req, res, next) => {
   if (err.code === 11000) {
     res
-      .status(CONFLICT_ERROR_CODE)
+      .status(409)
       .send({ message: 'Пользователь с такой почтой уже зарегистрирован' });
   } else {
     const { statusCode = 500, message } = err;

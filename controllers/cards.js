@@ -1,19 +1,20 @@
 const Card = require('../models/card');
-const {
-  NotFoundError,
-  ForbiddenError,
-  ValidationError,
-  formatErrorMessage
-} = require('../errors');
+const NotFoundError = require('../errors/NotFoundError');
+const ForbiddenError = require('../errors/ForbiddenError');
+const ValidationError = require('../errors/ValidationError');
+const formatErrorMessage = require('../errors/formatErrorMessage');
 
 module.exports.createCard = (req, res, next) => {
   const { name, link } = req.body;
 
   Card.create({ name, owner: req.user._id, link })
     .then((user) => res.status(200).send({ user }))
-    .catch(err => {
+    .catch((err) => {
       if (err.name === 'ValidationError') {
-        const message = formatErrorMessage(err.message, Object.keys(err.errors));
+        const message = formatErrorMessage(
+          err.message,
+          Object.keys(err.errors),
+        );
         next(new ValidationError(message));
       }
       next(err);
@@ -32,12 +33,14 @@ module.exports.deleteCard = (req, res, next) => {
       if (!card) {
         throw new NotFoundError('Карточка не найдена');
       }
-      if (card.owner._id != req.user._id) {
-        throw new MethodNotAllowedError('Вы не можете удалить карточку другого пользователя');
+      if (card.owner._id !== req.user._id) {
+        throw new ForbiddenError(
+          'Вы не можете удалить карточку другого пользователя',
+        );
       }
       res.status(200).send({ card });
     })
-    .catch(err => {
+    .catch((err) => {
       if (err.name === 'CastError') {
         next(new ValidationError('Введён некорректный id карточки'));
       }
@@ -57,9 +60,13 @@ module.exports.likeCard = (req, res, next) => {
       }
       res.status(200).send({ card });
     })
-    .catch(err => {
+    .catch((err) => {
       if (err.name === 'CastError') {
-        next(new ValidationError('При обновлении карточки были переданы некорректные данные'));
+        next(
+          new ValidationError(
+            'При обновлении карточки были переданы некорректные данные',
+          ),
+        );
       }
       next(err);
     });
@@ -77,9 +84,13 @@ module.exports.dislikeCard = (req, res, next) => {
       }
       res.status(200).send({ card });
     })
-    .catch(err => {
+    .catch((err) => {
       if (err.name === 'CastError') {
-        next(new ValidationError('При обновлении карточки были переданы некорректные данные'));
+        next(
+          new ValidationError(
+            'При обновлении карточки были переданы некорректные данные',
+          ),
+        );
       }
       next(err);
     });

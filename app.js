@@ -10,7 +10,7 @@ const { PORT = 3000, BASE_PATH } = process.env;
 const app = express();
 
 const { createUser, login } = require('./controllers/users');
-const { NotFoundError } = require('./errors');
+const { NotFoundError } = require('./errors/NotFoundError');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -25,14 +25,16 @@ app.post(
     body: Joi.object().keys({
       name: Joi.string().min(2).max(30).default('Жак-Ив Кусто'),
       about: Joi.string().min(2).max(30).default('Исследователь'),
-      avatar: Joi.string().regex(/^http[s]{0,1}:\/\/[a-z0-9@!$&\'-._~:\/?#[\]@!$&()*+,;=]{5,}/).default(
-        'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png'
-      ),
+      avatar: Joi.string()
+        .regex(/^http[s]{0,1}:\/\/[a-z0-9@!$&'-._~:/?#[\]@!$&()*+,;=]{5,}/)
+        .default(
+          'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
+        ),
       email: Joi.string().required().email(),
       password: Joi.string().required().min(8),
     }),
   }),
-  createUser
+  createUser,
 );
 
 app.post(
@@ -43,13 +45,18 @@ app.post(
       password: Joi.string().required().min(8),
     }),
   }),
-  login
+  login,
 );
 
 app.use('/users', require('./routes/users'));
 app.use('/cards', require('./routes/cards'));
+
 app.use((req, res, next) => {
-  next(new NotFoundError('Страница не найдена! Проверьте правильно ли введена ссылка'));
+  next(
+    new NotFoundError(
+      'Страница не найдена! Проверьте правильно ли введена ссылка',
+    ),
+  );
 });
 
 app.use(errors());
