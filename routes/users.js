@@ -37,6 +37,17 @@ router.patch(
   changeAvatar,
 );
 router.get('/', auth, getUsers);
-router.get('/:_id', auth, getUserById);
+router.get(
+  '/:_id',
+  celebrate({
+    params: Joi.object().keys({
+      _id: Joi.string()
+        .required()
+        .regex(/[a-z0-9]{10,}/),
+    }),
+  }),
+  auth,
+  getUserById,
+);
 
 module.exports = router;

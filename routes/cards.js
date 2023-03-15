@@ -35,7 +35,7 @@ router.post(
   auth,
   createCard,
 );
-router.delete(
+router.put(
   '/:_id/likes',
   celebrate({
     params: Joi.object().keys({
@@ -47,7 +47,7 @@ router.delete(
   auth,
   likeCard,
 );
-router.put(
+router.delete(
   '/:_id/likes',
   celebrate({
     params: Joi.object().keys({

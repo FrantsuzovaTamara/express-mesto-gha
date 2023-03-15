@@ -53,15 +53,11 @@ module.exports.likeCard = (req, res, next) => {
       if (!card) {
         throw new NotFoundError('Карточка не найдена');
       }
-      res.status(200).send({ message: 'Лайк успешно поставлен' });
+      res.status(200).send({ card });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(
-          new ValidationError(
-            'При обновлении карточки были переданы некорректные данные',
-          ),
-        );
+        next(new ValidationError('При обновлении карточки были переданы некорректные данные'));
       }
       next(err);
     });
@@ -77,15 +73,11 @@ module.exports.dislikeCard = (req, res, next) => {
       if (!card) {
         throw new NotFoundError('Карточка не найдена');
       }
-      res.status(200).send({ message: 'Лайк успешно удалён' });
+      res.send({ card });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(
-          new ValidationError(
-            'При обновлении карточки были переданы некорректные данные',
-          ),
-        );
+        next(new ValidationError('При обновлении карточки были переданы некорректные данные'));
       }
       next(err);
     });
