@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const { Joi, celebrate } = require('celebrate');
+const regex = require('../constants');
 const {
   getUser,
   getUsers,
@@ -7,46 +8,35 @@ const {
   changeProfileInfo,
   changeAvatar,
 } = require('../controllers/users');
-const auth = require('../middlewares/auth');
 
-router.get('/me', auth, getUser);
+router.get('/me', getUser);
 router.patch(
   '/me',
   celebrate({
     body: Joi.object().keys({
-      name: Joi.string().min(2).max(30).default('Жак-Ив Кусто'),
-      about: Joi.string().min(2).max(30).default('Исследователь'),
+      name: Joi.string().min(2).max(30),
+      about: Joi.string().min(2).max(30),
     }),
   }),
-  auth,
   changeProfileInfo,
 );
 router.patch(
   '/me/avatar',
-  auth,
   celebrate({
     body: Joi.object().keys({
-      avatar: Joi.string()
-        .regex(/^http[s]{0,1}:\/\/[a-z0-9@!$&'-._~:/?#[\]@!$&()*+,;=]{5,}/)
-        .default(
-          'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
-        ),
+      avatar: Joi.string().regex(regex),
     }),
   }),
-  auth,
   changeAvatar,
 );
-router.get('/', auth, getUsers);
+router.get('/', getUsers);
 router.get(
   '/:_id',
   celebrate({
     params: Joi.object().keys({
-      _id: Joi.string()
-        .required()
-        .regex(/[a-z0-9]{10,}/),
+      _id: Joi.string().length(24).hex().required(),
     }),
   }),
-  auth,
   getUserById,
 );
 

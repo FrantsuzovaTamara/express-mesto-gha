@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const isEmail = require('validator/lib/isEmail');
+const isURL = require('validator/lib/isURL');
 const UnauthorizedError = require('../errors/UnauthorizedError');
 
 const userSchema = new mongoose.Schema(
@@ -9,14 +10,21 @@ const userSchema = new mongoose.Schema(
       type: String,
       minlength: [2, 'Имя пользователя слишком короткое.'],
       maxlength: [30, 'Имя пользователя слишком длинное.'],
+      default: 'Жак-Ив Кусто',
     },
     about: {
       type: String,
       minlength: [2, 'Информация о себе слишком короткая.'],
       maxlength: [30, 'Информация о себе слишком длинная.'],
+      default: 'Исследователь',
     },
     avatar: {
       type: String,
+      validate: {
+        validator: (v) => isURL(v),
+        message: 'Неправильный формат ссылки',
+      },
+      default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
     },
     email: {
       type: String,
@@ -30,7 +38,6 @@ const userSchema = new mongoose.Schema(
     password: {
       type: String,
       required: true,
-      minlength: [8, 'Пароль слишком короткий'],
       select: false,
     },
   },
