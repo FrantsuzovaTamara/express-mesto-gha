@@ -7,20 +7,26 @@ const { JWT_SECRET = 'JWT_SECRET' } = process.env;
 
 const NotFoundError = require('../errors/NotFoundError');
 const ValidationError = require('../errors/ValidationError');
-const formatErrorMessage = require('../errors/formatErrorMessage');
+const ConflictError = require('../errors/ConflictError');
 
 module.exports.createUser = (req, res, next) => {
+  const {
+    name,
+    about,
+    avatar,
+    email,
+    password,
+  } = req.body;
+
   bcrypt
-    .hash(req.body.password, 10)
-    .then((hash) => {
-      User.create({
-        name: req.body.name,
-        about: req.body.about,
-        avatar: req.body.avatar,
-        email: req.body.email,
-        password: hash,
-      });
-    })
+    .hash(password, 10)
+    .then((hash) => User.create({
+      name,
+      about,
+      avatar,
+      email,
+      password: hash,
+    }))
     .then((user) => {
       res.status(201).send({
         name: user.name,
@@ -30,12 +36,11 @@ module.exports.createUser = (req, res, next) => {
       });
     })
     .catch((err) => {
+      if (err.code === 11000) {
+        next(new ConflictError('Пользователь с такой почтой уже зарегистрирован'));
+      }
       if (err.name === 'ValidationError') {
-        const message = formatErrorMessage(
-          err.message,
-          Object.keys(err.errors),
-        );
-        next(new ValidationError(message));
+        next(new ValidationError('Проверьте введённые данные'));
       }
       next(err);
     });
@@ -52,7 +57,12 @@ module.exports.login = (req, res, next) => {
         }),
       });
     })
-    .catch(next);
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        next(new ValidationError('Проверьте введённые данные'));
+      }
+      next(err);
+    });
 };
 
 module.exports.getUsers = (req, res, next) => {
@@ -114,11 +124,7 @@ module.exports.changeProfileInfo = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        const message = formatErrorMessage(
-          err.message,
-          Object.keys(err.errors),
-        );
-        next(new ValidationError(message));
+        next(new ValidationError('Проверьте введённые данные'));
       }
       next(err);
     });
@@ -140,11 +146,7 @@ module.exports.changeAvatar = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        const message = formatErrorMessage(
-          err.message,
-          Object.keys(err.errors),
-        );
-        next(new ValidationError(message));
+        next(new ValidationError('Проверьте введённые данные'));
       }
       next(err);
     });

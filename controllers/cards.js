@@ -2,7 +2,6 @@ const Card = require('../models/card');
 const NotFoundError = require('../errors/NotFoundError');
 const ForbiddenError = require('../errors/ForbiddenError');
 const ValidationError = require('../errors/ValidationError');
-const formatErrorMessage = require('../errors/formatErrorMessage');
 
 module.exports.createCard = (req, res, next) => {
   const { name, link } = req.body;
@@ -11,11 +10,7 @@ module.exports.createCard = (req, res, next) => {
     .then((user) => res.status(200).send({ user }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        const message = formatErrorMessage(
-          err.message,
-          Object.keys(err.errors),
-        );
-        next(new ValidationError(message));
+        next(new ValidationError('Проверьте введённые данные'));
       }
       next(err);
     });
