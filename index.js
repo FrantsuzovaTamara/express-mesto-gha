@@ -4,7 +4,9 @@ const regex = require('./constants');
 const { createUser, login } = require('./controllers/users');
 const auth = require('./middlewares/auth');
 const NotFoundError = require('./errors/NotFoundError');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 
+router.use(requestLogger);
 router.post(
   '/signup',
   celebrate({
@@ -42,5 +44,7 @@ router.use((req, res, next) => {
     ),
   );
 });
+
+router.use(errorLogger);
 
 module.exports = router;
